@@ -1,0 +1,16 @@
+{
+  "name": "server-man",
+  "version": "1.0.0",
+  "description": "Manage user access on  multiple ssh servers.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "Harish.K <harish2704@gmail.com> (https://github.com/harish2704)",
+  "license": "ISC",
+  "dependencies": {
+    "args": "^3.0.4",
+    "bluebird": "^3.5.0",
+    "json5": "^0.5.1"
+  }
+}

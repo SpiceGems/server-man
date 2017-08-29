@@ -21,13 +21,15 @@ module.exports = {
 ## Adding removing ssh keys
 
 #### CLI interface
-1. list status of all servers.
+1. list currently loaded server names and usernames
   > bin/server-man.js -a
-2. grant access to username 'jake' on server called 'devserver'
+2. list status of all servers.
+  > bin/server-man.js -l
+3. grant access to username 'jake' on server called 'devserver'
   > bin/server-man.js -n devserver -g jake
-3. set access of server 'devserver' to user 'jake' only
+4. set access of server 'devserver' to user 'jake' only
   > bin/server-man.js -n devserver -s jake
-4. revoke access to username 'jake' on server called 'devserver'
+5. revoke access to username 'jake' on server called 'devserver'
   > bin/server-man.js -n devserver -r jake
 
 

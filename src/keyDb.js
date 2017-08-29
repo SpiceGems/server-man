@@ -36,6 +36,9 @@ class KeyDb{
     const users = this.users;
     fs.readdirSync( KEY_DIR )
       .forEach(function( fname ){
+        if( fname[ 0 ] === '.' ){
+          return;
+        }
         const userKeys = new AuthKeys( fs.readFileSync( path.join( KEY_DIR, fname ), 'utf-8' ) );
         const user = new SshUser( fname, userKeys );
         users[ user.username ] = user;
@@ -50,6 +53,17 @@ class KeyDb{
 
   getUserKeys( username ){
     return this.users[ username ].authKeys;
+  }
+
+  authKeysToUsernames( authKeys ){
+    const usernames = [];
+    authKeys.lines.forEach( line => {
+      const user = this.getUsernameByKey( line.id ) || line.toString();
+      if( usernames.indexOf( user ) === -1 ){
+        usernames.push( user );
+      }
+    });
+    return usernames;
   }
 }
 

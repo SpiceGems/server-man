@@ -21,13 +21,13 @@ if( !fs.existsSync( TMP_DIR ) ){
 
 class Server{
 
-  constructor( host, port ){
+  constructor([ host, port ]){
     this.sshHost = host;
     this.sshPort = port || 22;
     this.keyLoadingTask = this.getAuthorizedKeys()
-    .then( file => {
-      this.authKeys = new AuthKeys( file );
-    });
+      .then( file => {
+        this.authKeys = new AuthKeys( file );
+      });
   }
 
   getAuthorizedKeys(){
@@ -41,19 +41,12 @@ class Server{
     fs.writeFileSync( tempFile, this.authKeys.toFile() );
     const cmd = `scp -P ${this.sshPort} ${tempFile} ${this.sshHost}:${AUTHORIZED_KEYS}`;
     return exec( cmd )
-    .tap(() => fs.rmFileSync(tempFile) );
+      .tap(() => fs.unlinkSync(tempFile) );
   }
 
   async listAccess(){
     await this.keyLoadingTask;
-    const users = [];
-    this.authKeys.lines.map(function( line ){
-      const user = keyDb.getUsernameByKey( line.id ) || line.toString();
-      if( users.indexOf( user ) === -1 ){
-        users.push( user );
-      }
-    });
-    return users;
+    return keyDb.authKeysToUsernames( this.authKeys );
   }
 
   async revokeAccess( usernames ){
@@ -67,6 +60,7 @@ class Server{
       this.authKeys.removeKey( userKeys.lines );
     });
     await this.writeAuthKeys();
+    return keyDb.authKeysToUsernames( this.authKeys );
   }
 
   async grantAccess( usernames ){
@@ -79,6 +73,20 @@ class Server{
       this.authKeys.addAccess( userKeys.lines );
     });
     await this.writeAuthKeys();
+    return keyDb.authKeysToUsernames( this.authKeys );
+  }
+
+  async setAccess( usernames ){
+    if( !Array.isArray( usernames ) ){
+      usernames = [ usernames ];
+    }
+    this.authKeys = new AuthKeys('');
+    usernames.forEach( username =>{
+      const userKeys = keyDb.getUserKeys( username );
+      this.authKeys.addAccess( userKeys.lines );
+    });
+    await this.writeAuthKeys();
+    return keyDb.authKeysToUsernames( this.authKeys );
   }
 
 }

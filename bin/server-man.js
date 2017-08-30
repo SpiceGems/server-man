@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const program = require('commander');
+const columnify = require('columnify');
 const keyDb = require('../src/keyDb');
 const Bluebird = require('bluebird');
 const path = require('path');
@@ -40,7 +41,7 @@ function runAction( method, arg ){
   });
   return Bluebird.props( task )
     .then(function( items ){
-      console.log( items );
+      console.log( columnify( items ) );
     });
 }
 

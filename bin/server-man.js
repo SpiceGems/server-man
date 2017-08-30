@@ -6,6 +6,7 @@ const Bluebird = require('bluebird');
 const path = require('path');
 const Server = require('../src/Server');
 const selfPackage = require('../package.json');
+const { log } = require('../src/utils');
 
 const opts = program
   .version( selfPackage.version )
@@ -20,19 +21,23 @@ const opts = program
 
 
 const servers  = require( path.resolve( opts.config || './servers' ) );
-const selectedServers = opts.serverName ? opts.serverName.split(',') : Object.keys( servers );
+const selectedServers = opts.serverName ? opts.serverName.split(',') : servers.map( v => v.name );
 
 
 function runAction( method, arg ){
   const task = {};
-  let name, server;
-  for( name in servers ){
-    if( selectedServers.indexOf( name ) === -1 ){
-      continue;
+  servers.forEach(function( srvData ){
+    if( selectedServers.indexOf( srvData.name ) === -1 ){
+      return ;
     }
-    server = new Server( servers[ name ] );
-    task[ name ] = arg ? server[ method ]( arg ) : server[ method ]();
-  }
+    const server = new Server( srvData );
+    const taskPromise = arg ? server[ method ]( arg ) : server[ method ]();
+    task[ srvData.name ] = taskPromise
+      .catch(function(){
+        log( 'failed to connet to server ', srvData.name, srvData.host  );
+        return '-- Failed  to connect --';
+      });
+  });
   return Bluebird.props( task )
     .then(function( items ){
       console.log( items );
@@ -43,7 +48,7 @@ function runAction( method, arg ){
 function listAll(){
   console.log( 'Server list');
   console.log( '-----------');
-  console.log( Object.keys( servers ));
+  console.log( servers.map( v=> v.name ) );
   console.log( '\n' );
   console.log('User list');
   console.log('---------');

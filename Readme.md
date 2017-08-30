@@ -6,15 +6,25 @@
 
 ## Organizing server list
 
-* Create a file called `servers.js` which should export an hash map of `servername` => [ 'user@host', portnumber ]
-Eg
+* Create a file called `servers.js` which should export an array of <Server> objects
+* Each <Server> object can have the following properties
+  - `host:` hostname or IP addreess
+  - `name:` A name to indentify the server.
+  - `port:` Port number ( Optional. default 22 )
+  - `user:` ssh user ( Optional : default: devuser )
+
+**Eg**
 ```javascript
-module.exports = {
-  app1Testing: [ 'devuser@8.8.8.8', 1122 ], // Non standard port number
-  app1Staging: ['devuser@8.8.8.7'], // Default port number
-  app2Testing: [ 'devuser@8.8.8.6', 1122 ],
-  app2Staging: ['devuser@8.8.8.5'],
-};
+module.exports = [
+    {
+      name: 'app1Dev',
+      host: '8.8.8.8',
+    },
+    {
+      name: 'app1Staging',
+      host: '8.8.8.9',
+    },
+];
 ```
 
 

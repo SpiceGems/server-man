@@ -18,11 +18,17 @@ const opts = program
   .option('-g, --grant [ user1 ]', 'Grant access to comma separated list of users')
   .option('-r, --revoke [ user1 ]', 'Revoke access of comma separated list of users')
   .option('-s, --set-access [ user1 ]', 'Set access to comma separated list of users only')
+  .option('-j, --json', 'Print result as json object instead of table format')
+  .option('-U, --update [ ./acl.js ]', 'set access on all servers as specified in acl.js')
   .parse(process.argv);
 
 
 const servers  = require( path.resolve( opts.config || './servers' ) );
 const selectedServers = opts.serverName ? opts.serverName.split(',') : servers.map( v => v.name );
+const acl = {};
+if( opts.update ){
+  Object.assign( acl, require( path.resolve( './acl' ) ) );
+}
 
 
 function runAction( method, arg ){
@@ -32,6 +38,11 @@ function runAction( method, arg ){
       return ;
     }
     const server = new Server( srvData );
+    if( arg ){
+      if( typeof arg === 'function' ){
+        arg = arg( srvData );
+      }
+    }
     const taskPromise = arg ? server[ method ]( arg ) : server[ method ]();
     task[ srvData.name ] = taskPromise
       .catch(function(){
@@ -41,7 +52,10 @@ function runAction( method, arg ){
   });
   return Bluebird.props( task )
     .then(function( items ){
-      console.log( columnify( items ) );
+      if( !opts.json ){
+        items = columnify( items );
+      }
+      console.log( items );
     });
 }
 
@@ -67,6 +81,8 @@ if( require.main === module ){
     return runAction( 'setAccess', opts.setAccess.split(',' ));
   } else if( opts.revoke ){
     return runAction( 'revokeAccess', opts.revoke.split(',' ));
+  }else if( opts.update ){
+    return runAction( 'setAccess', server => acl[ server.name ] );
   } else {
     opts.help();
   }

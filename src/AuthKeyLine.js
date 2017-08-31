@@ -8,7 +8,7 @@
 
 class AuthKeyLine{
   constructor( line , lineNo ){
-    const match = line.match(/(\S*) (\S*)(.*)/) || [];
+    const match = line.match(/ *(\S*) (\S*)(.*)/) || [];
     this.fullLine = line;
     this.id = match[ 2 ];
     this.rsa = match[ 1 ];

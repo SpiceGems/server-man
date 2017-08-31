@@ -52,7 +52,9 @@ function runAction( method, arg ){
   });
   return Bluebird.props( task )
     .then(function( items ){
-      if( !opts.json ){
+      if( opts.json ){
+        items = JSON.stringify( items, null, 2 );
+      } else {
         items = columnify( items );
       }
       console.log( items );

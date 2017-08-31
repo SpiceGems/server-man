@@ -41,6 +41,14 @@ module.exports = [
   > bin/server-man.js -n devserver -s jake
 5. revoke access to username 'jake' on server called 'devserver'
   > bin/server-man.js -n devserver -r jake
+5. Dump curret Access-Control-List ( ACL ) for servers. ( Ie, simply dump output of `-l` command as json )
+  > bin/server-man.js -l -j
+6. Update server access from `acl.js` file.
+  > bin/server-man.js -U
+
+  We can create a acl.js file by simply dumping current state in all the servers.
+  > bin/server-man.js -l -j >> acl.json
+
 
 
 #### API usage

@@ -34,16 +34,17 @@ if( opts.update ){
 function runAction( method, arg ){
   const task = {};
   servers.forEach(function( srvData ){
+    let methodArg = arg;
     if( selectedServers.indexOf( srvData.name ) === -1 ){
       return ;
     }
     const server = new Server( srvData );
-    if( arg ){
-      if( typeof arg === 'function' ){
-        arg = arg( srvData );
+    if( methodArg ){
+      if( typeof methodArg === 'function' ){
+        methodArg = methodArg( srvData );
       }
     }
-    const taskPromise = arg ? server[ method ]( arg ) : server[ method ]();
+    const taskPromise = methodArg ? server[ method ]( methodArg ) : server[ method ]();
     task[ srvData.name ] = taskPromise
       .catch(function(){
         log( 'failed to connet to server ', srvData.name, srvData.host  );

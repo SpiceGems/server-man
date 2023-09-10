@@ -32,7 +32,7 @@ class Server{
   }
 
   getAuthorizedKeys(){
-    return exec( `ssh -p ${this.sshPort} ${this.sshUser}@${this.sshHost} "mkdir -p .ssh && touch ${AUTHORIZED_KEYS} && cat ${AUTHORIZED_KEYS}"` );
+    return exec( `ssh -o StrictHostKeyChecking=accept-new -p ${this.sshPort} ${this.sshUser}@${this.sshHost} "mkdir -p .ssh && touch ${AUTHORIZED_KEYS} && cat ${AUTHORIZED_KEYS}"` );
   }
 
   async writeAuthKeys(){

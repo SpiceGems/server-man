@@ -52,15 +52,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"server-man@workspace:.":
+"ssh-access-manager@workspace:.":
   version: 0.0.0-use.local
-  resolution: "server-man@workspace:."
+  resolution: "ssh-access-manager@workspace:."
   dependencies:
     bluebird: ^3.7.2
     columnify: ^1.6.0
     commander: ^11.0.0
   bin:
-    server-man: ./bin/server-man.js
+    ssh-key-manager: ./bin/server-man.js
   languageName: unknown
   linkType: soft
 

@@ -1,12 +1,14 @@
 {
-  "name": "server-man",
-  "version": "1.2.0",
+  "name": "ssh-access-manager",
+  "version": "1.2.1",
   "description": "Manage user access on  multiple ssh servers.",
   "main": "index.js",
   "scripts": {
     "test": "mocha"
   },
-  "bin": "./bin/server-man.js",
+  "bin": {
+    "ssh-key-manager": "./bin/server-man.js"
+  },
   "author": "Harish.K <harish2704@gmail.com> (https://github.com/harish2704)",
   "license": "ISC",
   "dependencies": {

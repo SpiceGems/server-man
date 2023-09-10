@@ -6,14 +6,12 @@
   "scripts": {
     "test": "mocha"
   },
-  "bin": {
-    "server-man": "./bin/server-man.js"
-  },
+  "bin": "./bin/server-man.js",
   "author": "Harish.K <harish2704@gmail.com> (https://github.com/harish2704)",
   "license": "ISC",
   "dependencies": {
-    "bluebird": "^3.5.0",
-    "columnify": "^1.5.4",
-    "commander": "^2.11.0"
+    "bluebird": "^3.7.2",
+    "columnify": "^1.6.0",
+    "commander": "^11.0.0"
   }
 }

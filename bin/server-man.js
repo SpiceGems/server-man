@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const program = require('commander');
+const { program } = require('commander');
 const columnify = require('columnify');
 const keyDb = require('../src/keyDb');
 const Bluebird = require('bluebird');
@@ -9,7 +9,7 @@ const Server = require('../src/Server');
 const selfPackage = require('../package.json');
 const { log } = require('../src/utils');
 
-const opts = program
+program
   .version( selfPackage.version )
   .option('-a, --list-all', 'List available servers and users')
   .option('-c, --config [ ./servers.js ]', 'File exports hashmap of { servername: [ "user@host", optionalPort ]}')
@@ -19,9 +19,11 @@ const opts = program
   .option('-r, --revoke [ user1 ]', 'Revoke access of comma separated list of users')
   .option('-s, --set-access [ user1 ]', 'Set access to comma separated list of users only')
   .option('-j, --json', 'Print result as json object instead of table format')
-  .option('-U, --update [ ./acl.js ]', 'set access on all servers as specified in acl.js')
-  .parse(process.argv);
+  .option('-U, --update [ ./acl.js ]', 'set access on all servers as specified in acl.js');
 
+program.parse();
+
+const opts = program.opts()
 
 const servers  = require( path.resolve( opts.config || './servers' ) );
 const selectedServers = opts.serverName ? opts.serverName.split(',') : servers.map( v => v.name );

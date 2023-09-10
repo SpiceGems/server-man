@@ -32,22 +32,22 @@ module.exports = [
 
 #### CLI interface
 1. list currently loaded server names and usernames
-  > npx ssh-key-manager -a
+  >npx ssh-access-manager -a
 2. list status of all servers.
-  > npx ssh-key-manager -l
+  >npx ssh-access-manager -l
 3. grant access to username 'jake' on server called 'devserver'
-  > npx ssh-key-manager -n devserver -g jake
+  >npx ssh-access-manager -n devserver -g jake
 4. set access of server 'devserver' to user 'jake' only
-  > npx ssh-key-manager -n devserver -s jake
+  >npx ssh-access-manager -n devserver -s jake
 5. revoke access to username 'jake' on server called 'devserver'
-  > npx ssh-key-manager -n devserver -r jake
+  >npx ssh-access-manager -n devserver -r jake
 5. Dump curret Access-Control-List ( ACL ) for servers. ( Ie, simply dump output of `-l` command as json )
-  > npx ssh-key-manager -l -j
+  >npx ssh-access-manager -l -j
 6. Update server access from `acl.js` file.
-  > npx ssh-key-manager -U
+  >npx ssh-access-manager -U
 
   We can create a acl.js file by simply dumping current state in all the servers.
-  > npx ssh-key-manager -l -j >> acl.json
+  >npx ssh-access-manager -l -j >> acl.json
 
 
 

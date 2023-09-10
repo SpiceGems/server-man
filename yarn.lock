@@ -60,7 +60,7 @@ __metadata:
     columnify: ^1.6.0
     commander: ^11.0.0
   bin:
-    ssh-key-manager: ./bin/server-man.js
+    ssh-access-manager: ./bin/server-man.js
   languageName: unknown
   linkType: soft
 

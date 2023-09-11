@@ -89,6 +89,6 @@ if( require.main === module ){
   }else if( opts.update ){
     return runAction( 'setAccess', server => acl[ server.name ] );
   } else {
-    opts.help();
+    program.help();
   }
 }

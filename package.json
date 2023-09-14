@@ -9,7 +9,7 @@
   "bin": "./bin/server-man.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/harish2704/server-man"
+    "url": "https://github.com/SpiceGems/server-man"
   },
   "author": "Harish.K <harish2704@gmail.com> (https://github.com/harish2704)",
   "license": "ISC",

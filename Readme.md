@@ -1,3 +1,29 @@
+# Installation
+
+```
+npm i -g ssh-access-manager
+```
+
+# Usage
+```
+ssh-access-manager --help
+
+Usage: server-man [options]
+
+Options:
+  -V, --version                     output the version number
+  -a, --list-all                    List available servers and users
+  -c, --config [ ./servers.js ]     File exports hashmap of { servername: [ "user@host", optionalPort ]}
+  -n, --server-name [ testserver ]  Comma separated list of server names to operate
+  -l, --list                        List allowed users in all the servers
+  -g, --grant [ user1 ]             Grant access to comma separated list of users
+  -r, --revoke [ user1 ]            Revoke access of comma separated list of users
+  -s, --set-access [ user1 ]        Set access to comma separated list of users only
+  -j, --json                        Print result as json object instead of table format
+  -U, --update [ ./acl.js ]         set access on all servers as specified in acl.js
+  -h, --help                        display help for command
+
+```
 
 ## Organizing ssh keys of users
 
@@ -8,10 +34,10 @@
 
 * Create a file called `servers.js` which should export an array of <Server> objects
 * Each <Server> object can have the following properties
-  - `host:` hostname or IP addreess
+  - `host:` hostname or IP addreess or entry defined in ssh config
   - `name:` A name to indentify the server.
-  - `port:` Port number ( Optional. default 22 )
-  - `user:` ssh user ( Optional : default: devuser )
+  - `port:` Port number ( Optional )
+  - `user:` ssh user ( Optional )
 
 **Eg**
 ```javascript

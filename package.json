@@ -1,6 +1,6 @@
 {
   "name": "ssh-access-manager",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Manage user access on  multiple ssh servers.",
   "main": "index.js",
   "scripts": {

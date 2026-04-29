@@ -34,6 +34,7 @@ class KeyDb{
 
   loadKeys(){
     const users = this.users;
+    fs.mkdirSync(KEY_DIR, { recursive: true });
     fs.readdirSync( KEY_DIR )
       .forEach(function( fname ){
         if( fname[ 0 ] === '.' ){

@@ -13,7 +13,14 @@ const { log } = require('./utils');
 class AuthKeys{
 
   constructor( buf ){
-    const lines = buf.split('\n').filter( Boolean ).map( AuthKeyLine.create );
+    const lines = buf.split(/\r?\n/) // Split by CRLF or LF
+        .filter(line => {
+            const trimmedLine = line.trim();
+            // Filter conditions:
+            // - line is not empty after trimming
+            // - line does not start with '#'
+            return trimmedLine !== '' && !trimmedLine.startsWith('#');
+        }).map( AuthKeyLine.create );
     this.lines = lines;
     this.indexLines();
   }

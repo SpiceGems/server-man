@@ -21,7 +21,7 @@ if( !fs.existsSync( TMP_DIR ) ){
 
 class Server{
 
-  constructor({ host, port=22, user='devuser' }){
+  constructor({ host, port, user }){
     this.sshHost = host;
     this.sshPort = port;
     this.sshUser = user;
@@ -32,7 +32,7 @@ class Server{
   }
 
   getAuthorizedKeys(){
-    return exec( `ssh -o StrictHostKeyChecking=accept-new -p ${this.sshPort} ${this.sshUser}@${this.sshHost} "mkdir -p .ssh && touch ${AUTHORIZED_KEYS} && cat ${AUTHORIZED_KEYS}"` );
+    return exec( `ssh -o StrictHostKeyChecking=accept-new ${this.sshPort ? '-p ' + this.sshPort : '' } ${this.sshUser ? this.sshUser + '@' : ''}${this.sshHost} "mkdir -p .ssh && touch ${AUTHORIZED_KEYS} && cat ${AUTHORIZED_KEYS}"` );
   }
 
   async writeAuthKeys(){
@@ -40,7 +40,7 @@ class Server{
     const tempFile = path.join( TMP_DIR, tempFname );
 
     fs.writeFileSync( tempFile, this.authKeys.toFile() );
-    const cmd = `scp -P ${this.sshPort} ${tempFile} ${this.sshUser}@${this.sshHost}:${AUTHORIZED_KEYS}`;
+    const cmd = `scp ${this.sshPort ? '-P ' + this.sshPort : '' }  ${tempFile} ${this.sshUser ? this.sshUser + '@' : ''}${this.sshHost}:${AUTHORIZED_KEYS}`;
     return exec( cmd )
       .tap(() => fs.unlinkSync(tempFile) );
   }

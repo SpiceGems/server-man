@@ -81,10 +81,13 @@ class Server{
     if( !Array.isArray( usernames ) ){
       usernames = [ usernames ];
     }
-    this.authKeys = new AuthKeys('');
+    await this.keyLoadingTask;
+    // Revoke every known user not in the list, while preserving all data the
+    // tool does not manage: file comments, commented-out keys, keys of
+    // unknown users, restricted entries with options etc.
+    keyDb.revokeUnlistedUsers( this.authKeys, usernames );
     usernames.forEach( username =>{
-      const userKeys = keyDb.getUserKeys( username );
-      this.authKeys.addAccess( userKeys.lines );
+      this.authKeys.addAccess( keyDb.getUserKeys( username ).lines );
     });
     await this.writeAuthKeys();
     return keyDb.authKeysToUsernames( this.authKeys );

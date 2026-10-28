@@ -4,7 +4,7 @@
   "description": "Manage user access on  multiple ssh servers.",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "node --test"
   },
   "bin": "./bin/server-man.js",
   "repository": {

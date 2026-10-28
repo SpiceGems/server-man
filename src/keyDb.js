@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 const AuthKeys = require('./AuthKeys');
+const { log } = require('./utils');
 
 const KEY_DIR = path.join( process.env.PWD, 'keys' );
 
@@ -53,7 +54,25 @@ class KeyDb{
   }
 
   getUserKeys( username ){
-    return this.users[ username ].authKeys;
+    const user = this.users[ username ];
+    if( !user ){
+      // Unknown username ( e.g. a typo, or a full key line dumped by `listAccess` ).
+      // Returning an empty key set keeps grant/ revoke a no-op instead of crashing.
+      log( 'Unknown user', username );
+      return new AuthKeys('');
+    }
+    return user.authKeys;
+  }
+
+  /**
+   * Revoke access of every known user not present in `usernames`, leaving all
+   * other entries of `authKeys` ( comments, commented-out keys, keys of unknown
+   * users, restricted entries with options etc ) untouched.
+   */
+  revokeUnlistedUsers( authKeys, usernames ){
+    Object.keys( this.users )
+      .filter( username => usernames.indexOf( username ) === -1 )
+      .forEach( username => authKeys.removeKey( this.getUserKeys( username ).lines ) );
   }
 
   authKeysToUsernames( authKeys ){

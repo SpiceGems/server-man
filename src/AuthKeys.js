@@ -13,24 +13,30 @@ const { log } = require('./utils');
 class AuthKeys{
 
   constructor( buf ){
-    const lines = buf.split(/\r?\n/) // Split by CRLF or LF
-        .filter(line => {
-            const trimmedLine = line.trim();
-            // Filter conditions:
-            // - line is not empty after trimming
-            // - line does not start with '#'
-            return trimmedLine !== '' && !trimmedLine.startsWith('#');
-        }).map( AuthKeyLine.create );
-    this.lines = lines;
+    // `entries` preserves the structure of the source file verbatim: comment
+    // lines ( including commented-out keys ), blank lines and the order of
+    // all entries, along with the key lines. `lines` and `keyIndex` are
+    // derived from it and contain key lines only.
+    const rawLines = ( buf || '' ).split(/\r?\n/);
+    if( rawLines.length === 1 && rawLines[ 0 ] === '' ){
+      rawLines.pop(); // empty file
+    }
+    this.entries = rawLines.map(function( raw, lineNo ){
+      const trimmed = raw.trim();
+      if( trimmed !== '' && !trimmed.startsWith('#') ){
+        return new AuthKeyLine( raw, lineNo );
+      }
+      return raw; // comment line or blank line, kept as-is
+    });
     this.indexLines();
   }
 
   indexLines(){
+    this.lines = this.entries.filter( entry => entry instanceof AuthKeyLine );
     const keyIndex = {};
-    this.lines
-      .forEach(function(line){
-        keyIndex[ line.id ] = line;
-      });
+    this.lines.forEach(function(line){
+      keyIndex[ line.id ] = line;
+    });
     this.keyIndex = keyIndex;
   }
 
@@ -40,7 +46,7 @@ class AuthKeys{
     }
     const existing = this.keyIndex[ keyLine.id ];
     if( !existing ){
-      this.lines.push( keyLine );
+      this.entries.push( keyLine );
       this.indexLines();
     }
   }
@@ -53,13 +59,15 @@ class AuthKeys{
     const existing = this.keyIndex[ keyLine.id ];
     if( existing ){
       log( 'Found existing key ', existing.id  );
-      this.lines.splice( this.lines.indexOf( existing ), 1 );
+      this.entries.splice( this.entries.indexOf( existing ), 1 );
       this.indexLines();
     }
   }
 
   toFile(){
-    return this.lines.map( v=>v.fullLine ).join('\n');
+    return this.entries
+      .map( entry => entry instanceof AuthKeyLine ? entry.fullLine : entry )
+      .join('\n');
   }
 
 }

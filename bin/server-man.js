@@ -48,7 +48,8 @@ function runAction( method, arg ){
     }
     const taskPromise = methodArg ? server[ method ]( methodArg ) : server[ method ]();
     task[ srvData.name ] = taskPromise
-      .catch(function(){
+      .catch(function(err){
+        log('Error', err)
         log( 'failed to connet to server ', srvData.name, srvData.host  );
         return '-- Failed  to connect --';
       });
